@@ -1,6 +1,9 @@
 #!/bin/bash
 
-
+bold=$(tput bold)
+boldred=${bold}$(tput setaf 1)
+boldblue=${bold}$(tput setaf 4)
+normal=$(tput sgr0)
 
 function disp_help() {
     echo ""
@@ -9,7 +12,7 @@ function disp_help() {
     echo "  ~/.ssh/authorized_keys on target hosts. This can free you from"
     echo "  entering password everytime."
     echo ""
-    echo "Usage: "`echo $0`" [-h] [-f config_file] \"[CMD]\""
+    echo "${bold}Usage:${normal} "`echo $0`" [-h] [-f config_file] \"[CMD]\""
     echo "            -h: optional; has to be first arg;"
     echo "                do not execute any command but display this message"
     echo "            -f: optional; has to be first arg;"
@@ -19,20 +22,20 @@ function disp_help() {
     echo "* \\N in [CMD] will be substituted with corresponding [number]"
     echo "  indicated in configuration section"
     echo ""
-    echo "Files:"
+    echo "${bold}Files:${normal}"
     echo "        ~/.ssh-execute: configuration file"
     echo ""
-    echo "Examples:"
+    echo "${bold}Examples:${normal}"
     echo "    "`echo $0`" -h"
     echo "    "`echo $0`" -f ./example.ssh-execute ls --color -hl"
     echo "    "`echo $0`" \"echo \N\""
-    echo "    "`echo $0`"\" ip addr add 10.0.0.\n/24 dev wlan0\""
+    echo "    "`echo $0`" \"ip addr add 10.0.0.\n/24 dev wlan0\""
     echo ""
 }
 
 function disp_err() {
     echo ""
-    echo $1
+    echo "${boldred}error:${normal} $1"
     disp_help
 }
 
@@ -52,13 +55,13 @@ else
         source ~/.ssh-execute
         cmd_arg=$@
     else
-        disp_err "Error: ~/.ssh-execute does not exist"
+        disp_err "~/.ssh-execute does not exist"
         exit 1
     fi
 fi
 
 if [ "$cmd_arg" == "" ]; then
-    disp_err "Error: [CMD] is not given"
+    disp_err "[CMD] is not given"
     exit 1
 fi
 
@@ -68,7 +71,7 @@ do
     host=(`eval echo $h`)
     regex='s/\\N/'`echo ${host[3]}`'/g'
     cmd=`echo $cmd_arg | sed $regex`
-    echo -e "[\033[31;5;148m$i\033[39m]\$ $cmd"
+    echo -e "[${boldblue}$i${normal}]\$ $cmd"
     ssh -p ${host[2]} ${host[0]}@${host[1]} $cmd 2>&1
     echo ""
 done

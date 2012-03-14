@@ -7,5 +7,3 @@ host3=("root" "192.168.1.103" "22" 3)
 # Indicate enabled hosts tuples
 # hosts=([host reference] [host reference] ... )
 hosts=("host1" "host2" "host3")
-
-
