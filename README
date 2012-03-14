@@ -21,3 +21,5 @@ Examples:
     ./ssh-execute -f ./example.ssh-execute ls --color -hl
     ./ssh-execute "echo \N"
     ./ssh-execute "ip addr add 10.0.0.\n/24 dev wlan0"
+    ./ssh-execute -t pacman -Sy base-devel
+          * -t here is an ssh option

@@ -30,6 +30,8 @@ function disp_help() {
     echo "    "`echo $0`" -f ./example.ssh-execute ls --color -hl"
     echo "    "`echo $0`" \"echo \N\""
     echo "    "`echo $0`" \"ip addr add 10.0.0.\n/24 dev wlan0\""
+    echo "    "`echo $0`" -t pacman -Sy base-devel"
+    echo "          * -t here is an ssh option"
     echo ""
 }
 
