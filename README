@@ -1,0 +1,23 @@
+- This script executes commands on multiple hosts through ssh.
+- It is adviced that id_rsa.pub is appended to
+  ~/.ssh/authorized_keys on target hosts. This can free you from
+  entering password everytime.
+
+Usage: ./ssh-execute [-h] [-f config_file] "[CMD]"
+            -h: optional; has to be first arg;
+                do not execute any command but display this message
+            -f: optional; has to be first arg;
+                use config_file as configuration file
+         [CMD]: the command line that is to be executed.
+
+* \N in [CMD] will be substituted with corresponding [number]
+  indicated in configuration section
+
+Files:
+        ~/.ssh-execute: configuration file
+
+Examples:
+    ./ssh-execute -h
+    ./ssh-execute -f ./example.ssh-execute ls --color -hl
+    ./ssh-execute "echo \N"
+    ./ssh-execute" ip addr add 10.0.0.\n/24 dev wlan0"

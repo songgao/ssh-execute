@@ -1,0 +1,11 @@
+# Define tuple for each host
+# [host reference]=([username] [hostname] [port] [number])
+host1=("root" "192.168.1.101" "22" 1)
+host2=("root" "192.168.1.102" "22" 2)
+host3=("root" "192.168.1.103" "22" 3)
+
+# Indicate enabled hosts tuples
+# hosts=([host reference] [host reference] ... )
+hosts=("host1" "host2" "host3")
+
+

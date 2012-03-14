@@ -1,0 +1,76 @@
+#!/bin/bash
+
+
+
+function disp_help() {
+    echo ""
+    echo "- This script executes commands on multiple hosts through ssh."
+    echo "- It is adviced that id_rsa.pub is appended to"
+    echo "  ~/.ssh/authorized_keys on target hosts. This can free you from"
+    echo "  entering password everytime."
+    echo ""
+    echo "Usage: "`echo $0`" [-h] [-f config_file] \"[CMD]\""
+    echo "            -h: optional; has to be first arg;"
+    echo "                do not execute any command but display this message"
+    echo "            -f: optional; has to be first arg;"
+    echo "                use config_file as configuration file"
+    echo "         [CMD]: the command line that is to be executed."
+    echo ""
+    echo "* \\N in [CMD] will be substituted with corresponding [number]"
+    echo "  indicated in configuration section"
+    echo ""
+    echo "Files:"
+    echo "        ~/.ssh-execute: configuration file"
+    echo ""
+    echo "Examples:"
+    echo "    "`echo $0`" -h"
+    echo "    "`echo $0`" -f ./example.ssh-execute ls --color -hl"
+    echo "    "`echo $0`" \"echo \N\""
+    echo "    "`echo $0`"\" ip addr add 10.0.0.\n/24 dev wlan0\""
+    echo ""
+}
+
+function disp_err() {
+    echo ""
+    echo $1
+    disp_help
+}
+
+if [ "$1" == "-h" ]; then
+    disp_help
+    exit 0
+elif [ "$1" == "-f" ]; then
+    if [ -f $2 ]; then
+        source $2
+        cmd_arg=${@:3}
+    else
+        disp_err "Error: $2 does not exist"
+        exit 1
+    fi
+else
+    if [ -f ~/.ssh-execute ]; then
+        source ~/.ssh-execute
+        cmd_arg=$@
+    else
+        disp_err "Error: ~/.ssh-execute does not exist"
+        exit 1
+    fi
+fi
+
+if [ "$cmd_arg" == "" ]; then
+    disp_err "Error: [CMD] is not given"
+    exit 1
+fi
+
+for i in "${hosts[@]}"
+do
+    h="\${$i[@]}"
+    host=(`eval echo $h`)
+    regex='s/\\N/'`echo ${host[3]}`'/g'
+    cmd=`echo $cmd_arg | sed $regex`
+    echo -e "[\033[31;5;148m$i\033[39m]\$ $cmd"
+    ssh -p ${host[2]} ${host[0]}@${host[1]} $cmd 2>&1
+    echo ""
+done
+
+
