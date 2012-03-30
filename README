@@ -1,3 +1,6 @@
+* There is a great alternative to this - ClusterSSH. Checkout cssh(http://sourceforge.net/projects/clusterssh/) or csshx(http://code.google.com/p/csshx/) for more details!
+
+
 - This script executes commands on multiple hosts through ssh.
 - It is adviced that id_rsa.pub is appended to
   ~/.ssh/authorized_keys on target hosts. This can free you from
